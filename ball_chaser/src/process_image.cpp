@@ -28,30 +28,33 @@ enum IMAGE_REGION
   IMAGE_REGION_RIGHT
 };
 
-// This fuction to check postion of ball in image
+// This fuction to check position of ball in image
 IMAGE_REGION check_ball_position (const sensor_msgs::Image img)
 {
     int white_pixel = 255;
     int stepLeft = img.step / 3;
     int stepRight = 2 * img.step / 3;
     int i = 0, j = 0;
+    int k = 0; 
     // Check LEFT
     for (i = 0; i < stepLeft; i++)
     {
         for (j = 0; j < img.height; j++)
         {
-            if (img.data[j * img.step + i] ==  white_pixel) {
+            k = j * img.step + i;
+            if ((img.data[k] & img.data[k + 1] & img.data[k + 2]) ==  white_pixel) {
                 return IMAGE_REGION_LEFT;
             }
         }
     }
 
     // Check RIGHT
-    for (i = stepRight; i < img.step; i++)
+    for (i = stepRight; i < img.step - 2; i++)
     {
         for (j = 0; j < img.height; j++)
         {
-            if (img.data[j * img.step + i] ==  white_pixel) {
+            k = j * img.step + i;
+            if ((img.data[k] & img.data[k + 1] & img.data[k + 2]) ==  white_pixel) {
                 return IMAGE_REGION_RIGHT;
             }
         }
@@ -62,7 +65,8 @@ IMAGE_REGION check_ball_position (const sensor_msgs::Image img)
     {
         for (j = 0; j < img.height; j++)
         {
-            if (img.data[j * img.step + i] ==  white_pixel) {
+            k = j * img.step + i;
+            if ((img.data[k] & img.data[k + 1] & img.data[k + 2]) ==  white_pixel) {
                 return IMAGE_REGION_MID;
             }
         }
